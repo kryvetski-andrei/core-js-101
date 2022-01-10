@@ -376,22 +376,18 @@ function getDigitalRoot(num) {
  */
 function isBracketsBalanced(str) {
   const squareBrackets = {
-    type: 'square',
     opened: '[',
     closed: ']',
   };
   const roundBrackets = {
-    type: 'round',
     opened: '(',
     closed: ')',
   };
   const curlyBrackets = {
-    type: 'curly',
     opened: '{',
     closed: '}',
   };
   const angleBrackets = {
-    type: 'angle',
     opened: '<',
     closed: '>',
   };
@@ -400,38 +396,20 @@ function isBracketsBalanced(str) {
   const arrayOfBrackets = str.split('');
   const stack = [];
 
-  if (arrayOfBrackets[0] === ')'
-    || arrayOfBrackets[0] === ']'
-    || arrayOfBrackets[0] === '}'
-    || arrayOfBrackets[0] === '>') {
-    return false;
-  }
-
   arrayOfBrackets.forEach((bracket) => {
-    let typeOfBracket = '';
-
-    arrayOfTypesOfBrackets.forEach((element) => {
-      if (Object.values(element).includes(bracket)) {
-        typeOfBracket = element;
+    arrayOfTypesOfBrackets.forEach((type) => {
+      if (Object.values(type).includes(bracket)) {
+        if (stack[stack.length - 1] === type.opened && bracket === type.opened) {
+          stack.push(bracket);
+        } else if (bracket === type.closed && stack[stack.length - 1] === type.opened) {
+          stack.pop();
+        } else {
+          stack.push(bracket);
+        }
       }
     });
-
-    if (stack.length !== 0) {
-      if (Object
-        .keys(typeOfBracket)
-        .find((key) => typeOfBracket[key] === stack[stack.length - 1])) {
-        if (stack[stack.length - 1] === bracket) {
-          stack.push(bracket);
-        } else {
-          stack.pop();
-        }
-      } else {
-        stack.push(bracket);
-      }
-    } else {
-      stack.push(bracket);
-    }
   });
+
   return stack.length === 0;
 }
 
