@@ -465,12 +465,15 @@ function getCommonDirectoryPath(pathes) {
           stack.push(path[n]);
         }
       });
+
       if (stack.length === pathes.length) {
         result += [...new Set(stack)].join('');
         stack.length = 0;
       }
+
       return recursion(n + 1);
     }
+
     return result.slice(0, result.lastIndexOf('/') + 1);
   };
 
@@ -496,8 +499,21 @@ function getCommonDirectoryPath(pathes) {
  *                         [ 6 ]]
  *
  */
-function getMatrixProduct(/* m1, m2 */) {
-  throw new Error('Not implemented');
+function getMatrixProduct(m1, m2) {
+  const result = [];
+
+  for (let i = 0; i < m1.length; i += 1) {
+    result.push([]);
+    for (let j = 0; j < m2[0].length; j += 1) {
+      let sum = 0;
+      for (let k = 0; k < m1[0].length; k += 1) {
+        sum += m1[i][k] * m2[k][j];
+      }
+      result[i][j] = sum;
+    }
+  }
+
+  return result;
 }
 
 
@@ -531,8 +547,77 @@ function getMatrixProduct(/* m1, m2 */) {
  *    [    ,   ,    ]]
  *
  */
-function evaluateTicTacToePosition(/* position */) {
-  throw new Error('Not implemented');
+function evaluateTicTacToePosition(position) {
+  const GAME_FIELD_SIZE = 3;
+
+  const checkRows = () => {
+    const row = [];
+
+    for (let i = 0; i < position.length; i += 1) {
+      for (let j = 0; j < position[i].length; j += 1) {
+        row.push(position[i][j]);
+      }
+      if (
+        row.every((element) => element === row[0])
+        && row.length === GAME_FIELD_SIZE
+        && row[0] !== undefined
+      ) {
+        break;
+      } else {
+        row.length = 0;
+      }
+    }
+
+    return row.length === 0 ? undefined : row[0];
+  };
+
+  const checkColumns = () => {
+    const column = [];
+
+    for (let i = 0; i < position[0].length; i += 1) {
+      for (let j = 0; j < position.length; j += 1) {
+        column.push(position[j][i]);
+      }
+      if (
+        column.every((element) => element === column[0])
+        && column.length === GAME_FIELD_SIZE
+      ) {
+        break;
+      } else {
+        column.length = 0;
+      }
+    }
+
+    return column.length === 0 ? undefined : column[0];
+  };
+
+  const checkMainDiagonal = () => {
+    const diagonal = [];
+
+    for (let i = 0; i < position.length; i += 1) {
+      diagonal.push(position[i][i]);
+    }
+
+    return diagonal.every((element) => element === diagonal[0])
+      && diagonal.length === GAME_FIELD_SIZE
+      ? diagonal[0]
+      : undefined;
+  };
+
+  const checkSideDiagonal = () => {
+    const diagonal = [];
+
+    for (let i = 0; i < position.length; i += 1) {
+      diagonal.push(position[i][position.length - 1 - i]);
+    }
+
+    return diagonal.every((element) => element === diagonal[0])
+      && diagonal.length === GAME_FIELD_SIZE
+      ? diagonal[0]
+      : undefined;
+  };
+
+  return checkRows() || checkColumns() || checkMainDiagonal() || checkSideDiagonal();
 }
 
 
